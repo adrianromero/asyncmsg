@@ -6,7 +6,6 @@ use std::sync::Arc;
 use tokio::sync::mpsc::Receiver;
 use tokio::sync::Mutex;
 
-#[derive(Clone)]
 pub struct MultiReceiver<T> {
     rx: Arc<Mutex<Receiver<T>>>,
 }
@@ -14,6 +13,13 @@ impl<T> From<Receiver<T>> for MultiReceiver<T> {
     fn from(rx: Receiver<T>) -> Self {
         MultiReceiver {
             rx: Arc::new(Mutex::new(rx)),
+        }
+    }
+}
+impl<T> Clone for MultiReceiver<T> {
+    fn clone(&self) -> Self {
+        Self {
+            rx: self.rx.clone(),
         }
     }
 }
